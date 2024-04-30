@@ -179,8 +179,10 @@ def improved_model(dtf):
     # Calculate Daily Returns
     dtf['Daily_Return'] = dtf.groupby('Crypto')['Close'].pct_change() * 100
 
-    # Calculate Moving Averages
-    for window_size in [5, 10, 20]:
+    # Specify the window sizes for moving averages
+    window_sizes = [5, 10, 20]
+    # Calculate Moving Averages for each window size
+    for window_size in window_sizes:
         dtf[f'MA_{window_size}'] = dtf.groupby('Crypto')['Close'].rolling(window=window_size).mean().reset_index(
             level=0, drop=True)
 
@@ -209,11 +211,11 @@ def improved_model(dtf):
 
     # Hyperparameter tuning using Random Search
     param_dist = {
-        'regressor__n_estimators': randint(100, 1000),
-        'regressor__max_depth': randint(3, 7),
-        'regressor__learning_rate': uniform(0.05, 0.2),
-        'regressor__subsample': uniform(0.7, 0.3),
-        'regressor__colsample_bytree': uniform(0.7, 0.3)
+        'regressor__n_estimators': randint(100, 500),
+        'regressor__max_depth': randint(3, 5),
+        'regressor__learning_rate': uniform(0.05, 0.1),
+        'regressor__subsample': uniform(0.8, 0.2),
+        'regressor__colsample_bytree': uniform(0.8, 0.2)
     }
 
     # Instantiate Random Search with the model and hyperparameter grid
